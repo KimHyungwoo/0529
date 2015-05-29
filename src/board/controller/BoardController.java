@@ -1,11 +1,17 @@
 package board.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import board.action.Action;
+import board.action.BoardListAction;
+import board.action.BoardWriteAction;
+import board.action.BoardWriteFormAction;
 
 /**
  * Servlet implementation class BoardController
@@ -37,13 +43,42 @@ public class BoardController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		request.setCharacterEncoding("UTF-8");
 		doProcess(request, response);
 	}
 	
 	protected void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-		System.out.println("GG");
+		// System.out.println("GG");
+		
+		String contextPath = request.getContextPath();
+		String uri = request.getRequestURI();
+		String command = uri.substring(contextPath.length()); // substring : 글씨를 잘라온다는 의미
+		
+/*		System.out.println(contextPath);
+		System.out.println(uri);
+		System.out.println("command : " + command);*/
+		
+		// 글쓰기 폼
+		if(command.equals("/writeForm.board")) {
+			Action action = new BoardWriteFormAction(); // new 할때는 자식, 담을때는 부모
+			action.execute(request, response); // 동적바인딩, 해당 execute 실행해야 됨
+		}
+		
+		// 글쓰기
+		else if(command.equals("/write.board")) {
+			// System.out.println("/write.board"); // 확인해보는 것 
+			Action action = new BoardWriteAction(); 
+			action.execute(request, response); 
+			
+		}
+		
+		// 리스트
+		else if(command.equals("/list.board")) {
+			Action action = new BoardListAction(); 
+			action.execute(request, response); 
+		}
 	}
 
 }
